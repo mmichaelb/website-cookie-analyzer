@@ -16,6 +16,8 @@ const (
 	navigateTimeout = time.Second * 30
 	// sets the duration how long to wait until collecting the cookies
 	cookieSetWait = time.Second * 5
+	// sets the duration how to wait before deleting the temp directory
+	cleanUpDelay = time.Second
 )
 
 type WebsiteCookies struct {
@@ -54,8 +56,16 @@ func fetchCookiesSingleWebsite(website string) (*WebsiteCookies, error) {
 			logrus.WithError(err).WithField("chromeDir", dir).Warnln("Could not delete chrome working directory!")
 		}
 	}()
+	cookies, err := fetchBrowserCookies(website, dir)
+	time.Sleep(cleanUpDelay)
+	return cookies, err
+}
+
+func fetchBrowserCookies(website string, dir string) (*WebsiteCookies, error) {
 	options := append(chromeExecOptions, chromedp.UserDataDir(dir))
-	ctx, cancel := chromedp.NewExecAllocator(context.Background(), options...)
+	execCtx, cancel := chromedp.NewExecAllocator(context.Background(), options...)
+	defer cancel()
+	ctx, cancel := chromedp.NewContext(execCtx)
 	defer cancel()
 	if err := chromedp.Run(ctx); err != nil {
 		logrus.WithError(err).WithField("website", website).Fatalln("Could not run browser process!")
@@ -63,7 +73,7 @@ func fetchCookiesSingleWebsite(website string) (*WebsiteCookies, error) {
 	url := fmt.Sprintf("http://%s", website)
 	timeOutCtx, cancel := context.WithTimeout(ctx, navigateTimeout)
 	defer cancel()
-	err = chromedp.Run(timeOutCtx, chromedp.Navigate(url))
+	err := chromedp.Run(timeOutCtx, chromedp.Navigate(url))
 	if err != nil {
 		if err == context.DeadlineExceeded {
 			logrus.WithField("website", website).WithField("timeout", navigateTimeout.String()).Warnln("Website load timeout exceeded.")
@@ -88,7 +98,7 @@ func fetchCookiesSingleWebsite(website string) (*WebsiteCookies, error) {
 		logrus.WithError(err).WithField("website", website).Errorln("Could not retrieve cookies!")
 		return nil, err
 	}
-	return result, err
+	return result, nil
 }
 
 func setupChromeDirectory() (name string, err error) {
