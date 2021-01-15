@@ -11,6 +11,7 @@ var (
 	websitesInputFilepath = flag.String("websitesFile", "./websites.csv", "Sets the file path to the input websites file.")
 
 	websites []string
+	cookies  []*websitecookieanalyzer.WebsiteCookies
 )
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 		logrus.SetLevel(level)
 	}
 	loadWebsites()
+	fetchCookies()
 }
 
 func loadWebsites() {
@@ -35,4 +37,10 @@ func loadWebsites() {
 		logrus.WithError(err).Fatalln("Could not read website file!")
 	}
 	logrus.WithField("websiteCount", len(websites)).Infoln("Successfully loaded website file.")
+}
+
+func fetchCookies() {
+	logrus.Infoln("Fetching cookies for websites...")
+	cookies = websitecookieanalyzer.FetchCookies(websites)
+	logrus.WithField("cookieFetchWebsites", len(cookies)).Infoln("Fetched cookies for websites.")
 }
