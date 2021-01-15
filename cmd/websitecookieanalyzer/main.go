@@ -1,9 +1,11 @@
 package main
 
 import (
+	"encoding/xml"
 	"flag"
 	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer"
 	"github.com/sirupsen/logrus"
+	"os"
 )
 
 var (
@@ -27,6 +29,7 @@ func main() {
 	}
 	loadWebsites()
 	fetchCookies()
+	writeCookies()
 }
 
 func loadWebsites() {
@@ -43,4 +46,24 @@ func fetchCookies() {
 	logrus.Infoln("Fetching cookies for websites...")
 	cookies = websitecookieanalyzer.FetchCookies(websites)
 	logrus.WithField("cookieFetchWebsites", len(cookies)).Infoln("Fetched cookies for websites.")
+}
+
+func writeCookies() {
+	logrus.WithField("cookiesOutputFile", *cookiesOutputFilepath).Infoln("Writing cookies to cookie output file...")
+	file, err := os.Create(*cookiesOutputFilepath)
+	if err != nil {
+		logrus.WithError(err).Fatalln("Could not create cookie output file!")
+	}
+	defer file.Close()
+	xmlBytes, err := xml.MarshalIndent(cookies, "", "  ")
+	if err != nil {
+		logrus.WithError(err).WithField("cookiesOutputFile", *cookiesOutputFilepath).Fatalln("Could not encode cookie output!")
+	}
+	if _, err = file.WriteString(xml.Header); err != nil {
+		logrus.WithError(err).WithField("cookiesOutputFile", *cookiesOutputFilepath).Fatalln("Could not write XML Header!")
+	}
+	if _, err = file.Write(xmlBytes); err != nil {
+		logrus.WithError(err).WithField("cookiesOutputFile", *cookiesOutputFilepath).Fatalln("Could not write XML body!")
+	}
+	logrus.Infoln("Successfully written cookies for websites.")
 }
