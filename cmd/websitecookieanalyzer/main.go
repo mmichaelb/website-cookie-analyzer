@@ -4,6 +4,7 @@ import (
 	"encoding/xml"
 	"flag"
 	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer"
+	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer/analysis"
 	"github.com/sirupsen/logrus"
 	"os"
 )
@@ -13,9 +14,11 @@ var (
 	websitesInputFilepath = flag.String("websitesFile", "./websites.csv", "Sets the file path to the input websites file.")
 	cookiesFilepath       = flag.String("cookiesFile", "./cookies.xml", "Sets the file path to the output cookies file.")
 	fetchNewCookies       = flag.Bool("fetch", true, "Determines whether the domain input file should be used in order to fetch the cookies.")
+	trackersInputFilepath = flag.String("trackersFile", "./trackers.csv", "Sets the file path to the input trackers file.")
 
 	websites          []string
 	cookieFetchResult *websitecookieanalyzer.CookieFetchResult
+	trackers          []string
 )
 
 func main() {
@@ -38,6 +41,7 @@ func main() {
 		writeCookies()
 	}
 	readCookies()
+	loadTrackers()
 	logrus.Exit(0)
 }
 
@@ -88,4 +92,14 @@ func readCookies() {
 		logrus.WithError(err).Fatalln("Could not load cookies from cookie file!")
 	}
 	logrus.WithField("websiteAmount", len(cookieFetchResult.Cookies)).Infoln("Read cookies from cookie file.")
+}
+
+func loadTrackers() {
+	logrus.WithField("trackersFile", *trackersInputFilepath).Infoln("Loading trackers file...")
+	var err error
+	trackers, err = analysis.LoadTrackers(*trackersInputFilepath)
+	if err != nil {
+		logrus.WithError(err).Fatalln("Could not read trackers file!")
+	}
+	logrus.WithField("trackerCount", len(trackers)).Infoln("Successfully loaded trackers file.")
 }
