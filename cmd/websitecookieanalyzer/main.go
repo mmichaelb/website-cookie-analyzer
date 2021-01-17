@@ -5,6 +5,7 @@ import (
 	"flag"
 	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer"
 	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer/analysis"
+	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer/fetch"
 	"github.com/sirupsen/logrus"
 	"os"
 )
@@ -17,7 +18,7 @@ var (
 	trackersInputFilepath = flag.String("trackersFile", "./trackers.csv", "Sets the file path to the input trackers file.")
 
 	websites          []string
-	cookieFetchResult *websitecookieanalyzer.CookieFetchResult
+	cookieFetchResult *fetch.CookieFetchResult
 	trackers          []string
 )
 
@@ -48,7 +49,7 @@ func main() {
 func loadWebsites() {
 	logrus.WithField("websitesFile", *websitesInputFilepath).Infoln("Loading website file...")
 	var err error
-	websites, err = websitecookieanalyzer.LoadWebsites(*websitesInputFilepath)
+	websites, err = fetch.LoadWebsites(*websitesInputFilepath)
 	if err != nil {
 		logrus.WithError(err).Fatalln("Could not read website file!")
 	}
@@ -56,7 +57,7 @@ func loadWebsites() {
 }
 
 func fetchCookies() {
-	cookieFetchResult = websitecookieanalyzer.FetchCookies(websites)
+	cookieFetchResult = fetch.FetchCookies(websites)
 }
 
 func writeCookies() {
@@ -87,7 +88,7 @@ func readCookies() {
 	}
 	defer file.Close()
 	decoder := xml.NewDecoder(file)
-	cookieFetchResult = &websitecookieanalyzer.CookieFetchResult{}
+	cookieFetchResult = &fetch.CookieFetchResult{}
 	if err = decoder.Decode(&cookieFetchResult); err != nil {
 		logrus.WithError(err).Fatalln("Could not load cookies from cookie file!")
 	}

@@ -1,4 +1,4 @@
-package websitecookieanalyzer
+package fetch
 
 import (
 	"context"
