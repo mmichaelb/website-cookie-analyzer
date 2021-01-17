@@ -79,8 +79,9 @@ func readCookies() {
 	logrus.WithField("cookiesFile", *cookiesFilepath).Infoln("Reading cookies from cookie file...")
 	file, err := os.Open(*cookiesFilepath)
 	if err != nil {
-		logrus.WithError(err).Fatalln("Could not create cookie output file!")
+		logrus.WithError(err).Fatalln("Could not open cookie file!")
 	}
+	defer file.Close()
 	decoder := xml.NewDecoder(file)
 	cookieFetchResult = &websitecookieanalyzer.CookieFetchResult{}
 	if err = decoder.Decode(&cookieFetchResult); err != nil {

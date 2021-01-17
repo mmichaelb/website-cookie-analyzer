@@ -11,6 +11,7 @@ func LoadWebsites(websitesInputFilepath string) ([]string, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 	websites := make([]string, 0)
 	reader := csv.NewReader(file)
 	reader.FieldsPerRecord = 1
