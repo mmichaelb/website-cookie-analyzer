@@ -14,8 +14,8 @@ var (
 	cookiesFilepath       = flag.String("cookiesFile", "./cookies.xml", "Sets the file path to the output cookies file.")
 	fetchNewCookies       = flag.Bool("fetch", true, "Determines whether the domain input file should be used in order to fetch the cookies.")
 
-	websites []string
-	cookies  []*websitecookieanalyzer.WebsiteCookies
+	websites          []string
+	cookieFetchResult *websitecookieanalyzer.CookieFetchResult
 )
 
 func main() {
@@ -37,6 +37,7 @@ func main() {
 		fetchCookies()
 		writeCookies()
 	}
+	readCookies()
 	logrus.Exit(0)
 }
 
@@ -51,19 +52,17 @@ func loadWebsites() {
 }
 
 func fetchCookies() {
-	logrus.Infoln("Fetching cookies for websites...")
-	cookies = websitecookieanalyzer.FetchCookies(websites)
-	logrus.WithField("cookieFetchWebsites", len(cookies)).Infoln("Fetched cookies for websites.")
+	cookieFetchResult = websitecookieanalyzer.FetchCookies(websites)
 }
 
 func writeCookies() {
-	logrus.WithField("cookiesOutputFile", *cookiesFilepath).Infoln("Writing cookies to cookie output file...")
+	logrus.WithField("cookiesFile", *cookiesFilepath).Infoln("Writing cookies to cookie output file...")
 	file, err := os.Create(*cookiesFilepath)
 	if err != nil {
 		logrus.WithError(err).Fatalln("Could not create cookie output file!")
 	}
 	defer file.Close()
-	xmlBytes, err := xml.MarshalIndent(cookies, "", "  ")
+	xmlBytes, err := xml.MarshalIndent(cookieFetchResult, "", "  ")
 	if err != nil {
 		logrus.WithError(err).WithField("cookiesOutputFile", *cookiesFilepath).Fatalln("Could not encode cookie output!")
 	}
@@ -74,4 +73,18 @@ func writeCookies() {
 		logrus.WithError(err).WithField("cookiesOutputFile", *cookiesFilepath).Fatalln("Could not write XML body!")
 	}
 	logrus.Infoln("Successfully written cookies for websites.")
+}
+
+func readCookies() {
+	logrus.WithField("cookiesFile", *cookiesFilepath).Infoln("Reading cookies from cookie file...")
+	file, err := os.Open(*cookiesFilepath)
+	if err != nil {
+		logrus.WithError(err).Fatalln("Could not create cookie output file!")
+	}
+	decoder := xml.NewDecoder(file)
+	cookieFetchResult = &websitecookieanalyzer.CookieFetchResult{}
+	if err = decoder.Decode(&cookieFetchResult); err != nil {
+		logrus.WithError(err).Fatalln("Could not load cookies from cookie file!")
+	}
+	logrus.WithField("websiteAmount", len(cookieFetchResult.Cookies)).Infoln("Read cookies from cookie file.")
 }
