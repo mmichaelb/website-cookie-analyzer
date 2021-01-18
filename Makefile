@@ -11,7 +11,7 @@ OUTPUT_PREFIX=./bin/${PROJECT_NAME}-${GIT_VERSION}
 
 # test go program
 test:
-	@go test ./...
+	@go test -v ./...
 
 # builds and formats the project with the built-in Golang tool
 .PHONY: build
