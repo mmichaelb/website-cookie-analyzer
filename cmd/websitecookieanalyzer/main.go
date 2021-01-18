@@ -90,10 +90,11 @@ func readCookies() {
 	defer file.Close()
 	decoder := xml.NewDecoder(file)
 	cookieFetchResult = &fetch.CookieFetchResult{}
-	if err = decoder.Decode(&cookieFetchResult); err != nil {
+	if err = decoder.Decode(cookieFetchResult); err != nil {
 		logrus.WithError(err).Fatalln("Could not load cookies from cookie file!")
 	}
-	logrus.WithField("websiteAmount", len(cookieFetchResult.Cookies)).Infoln("Read cookies from cookie file.")
+	test := cookieFetchResult
+	logrus.WithField("websiteAmount", len(test.Cookies)).Infoln("Read cookies from cookie file.")
 }
 
 func loadTrackers() {
