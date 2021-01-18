@@ -19,6 +19,11 @@ The latest binary of this software can be found at the releases page of this pro
 In order to use this program, the user has to provide a list of websites and a list of trackers. This list of trackers
 is required to detect possible tracking cookies.
 
+The following code block shows a working example:
+```bash
+./website-cookie-analyzer -fetch= true -cookiesFile ./cookies_out.xml -reportFile report.xml -trackersFile ./trackers.csv -websitesFile ./websites_100.csv
+```
+
 ## List of websites
 
 Syntax:
