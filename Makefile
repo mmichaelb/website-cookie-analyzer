@@ -9,6 +9,8 @@ OUTPUT_SUFFIX=$(go env GOEXE)
 
 OUTPUT_PREFIX=./bin/${PROJECT_NAME}-${GIT_VERSION}
 
+OUTPUT_FILE_ENDING=$(shell go env GOEXE)
+
 # test go program
 test:
 	@go test -v ./...
