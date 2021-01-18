@@ -2,10 +2,26 @@ package analysis
 
 import (
 	"bufio"
+	"github.com/chromedp/cdproto/network"
+	"github.com/mmichaelb/website-cookie-analyzer/internal/pkg/websitecookieanalyzer/fetch"
 	"github.com/sirupsen/logrus"
 	"os"
 	"strings"
 )
+
+func analyzeTrackerCookies(cookieData []*fetch.WebsiteCookies, report *Report, trackers []string) (thirdPartyCookieData *ReportSpecificCookieData) {
+	trackerCookieCheckFunc := func(domain string, cookie *network.Cookie) bool {
+		for _, tracker := range trackers {
+			// remove leading dots
+			trimmedCookieDomain := strings.Trim(cookie.Domain, ".")
+			if strings.EqualFold(trimmedCookieDomain, tracker) {
+				return true
+			}
+		}
+		return false
+	}
+	return analyzeSpecificCookies(cookieData, report, trackerCookieCheckFunc)
+}
 
 func LoadTrackers(trackersFilepath string) ([]string, error) {
 	file, err := os.Open(trackersFilepath)

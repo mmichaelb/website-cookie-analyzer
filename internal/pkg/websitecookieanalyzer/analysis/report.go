@@ -1,17 +1,22 @@
 package analysis
 
+import "time"
+
 type Report struct {
+	Timestamp            time.Time
 	DomainNumber         int
-	CookieData           ReportCookieData
-	ThirdPartyCookieData ReportSpecificCookieData
-	TrackerCookieData    ReportSpecificCookieData
+	TrackerNumber        int
+	CookieData           *ReportCookieData
+	ThirdPartyCookieData *ReportSpecificCookieData
+	TrackerCookieData    *ReportSpecificCookieData
 }
 
 type ReportCookieData struct {
-	Amount          int
-	AveragePerSite  float32
-	MedianPerSite   float32
-	WebsitesNoUsage int
+	Amount               int
+	AveragePerSite       float32
+	MedianPerSite        float32
+	WebsitesAboveAverage int
+	WebsitesNoUsage      int
 }
 
 type ReportSpecificCookieData struct {
