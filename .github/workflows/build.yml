@@ -23,6 +23,7 @@ jobs:
         os: [ubuntu-latest]
         compile-os-arch: ["GOOS=linux GOARCH=amd64", "GOOS=linux GOARCH=386", "GOOS=linux GOARCH=arm64", "GOOS=linux GOARCH=arm", "GOOS=windows GOARCH=amd64", "GOOS=windows GOARCH=386"]
     runs-on: ${{ matrix.os }}
+    needs: test
     steps:
       - name: Install Go
         uses: actions/setup-go@v2
