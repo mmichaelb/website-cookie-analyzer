@@ -20,6 +20,10 @@ var (
 	websites          []string
 	cookieFetchResult *fetch.CookieFetchResult
 	trackers          []string
+
+	// set variables when compiling
+	GitVersion string
+	GitBranch  string
 )
 
 func main() {
@@ -28,6 +32,7 @@ func main() {
 		ForceQuote:       true,
 		QuoteEmptyFields: true,
 	})
+	logrus.WithFields(logrus.Fields{"version": GitVersion, "branch": GitBranch}).Infoln("Starting program...")
 	logrus.RegisterExitHandler(func() {
 		logrus.Infoln("Application stopping. Goodbye!")
 	})
