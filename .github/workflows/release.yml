@@ -2,7 +2,7 @@ name: Release job
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
 jobs:
   release:
     strategy:

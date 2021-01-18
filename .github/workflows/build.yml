@@ -1,8 +1,6 @@
 name: Build and Deploy job
 on:
   push:
-    tags-ignore:
-      - '*'
   pull_request:
 jobs:
   test:
