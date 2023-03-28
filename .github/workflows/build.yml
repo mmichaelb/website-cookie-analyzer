@@ -15,7 +15,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Test code
         run: make test
   build:
@@ -32,7 +32,7 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Build standard binaries
         run: ${{ matrix.compile-os-arch }} make build
       - name: Upload build artifacts
@@ -50,7 +50,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Download Build artifacts
         uses: actions/download-artifact@v2
         with:
