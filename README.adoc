@@ -1,6 +1,9 @@
 = website-cookie-analyzer
 This project aims to provide websites statistics about cookie usage.
 
+[link=https://github.com/mmichaelb/website-cookie-analyzer/actions/workflows/build.yml]
+image::https://github.com/mmichaelb/website-cookie-analyzer/actions/workflows/build.yml/badge.svg[Build and Deploy job]
+
 == Description
 
 This project has been developed as part of a term paper which analyzes Cookie usage on websites.
