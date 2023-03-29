@@ -56,7 +56,7 @@ Example: https://github.com/StevenBlack/hosts/
 
 # Compiling
 
-In order to compile this binary, the source code has to be cloned and Golang v1.15.* must be installed locally. 
+In order to compile this binary, the source code has to be cloned and Golang v1.20.* must be installed locally. 
 Compiling is done by running the following command:
 
 ```bash
