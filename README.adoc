@@ -10,8 +10,7 @@ This project has been developed as part of a term paper which analyzes Cookie us
 
 == Prerequisites
 
-In order to run this application, the **[Chromium Embedded Framework](https://bitbucket.org/chromiumembedded/cef/)** is 
-required.
+In order to run this application, the **https://bitbucket.org/chromiumembedded/cef/[Chromium Embedded Framework]** is required.
 
 == Download
 
