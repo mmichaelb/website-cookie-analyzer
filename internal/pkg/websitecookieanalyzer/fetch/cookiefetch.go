@@ -152,7 +152,7 @@ func fetchBrowserCookies(website string) ([]*network.Cookie, error) {
 	time.Sleep(cookieSetWait)
 	var cookies []*network.Cookie
 	action := chromedp.ActionFunc(func(ctx context.Context) (err error) {
-		cookies, err = network.GetAllCookies().Do(ctx)
+		cookies, err = network.GetCookies().Do(ctx)
 		if err != nil {
 			return err
 		}
