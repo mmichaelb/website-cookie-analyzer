@@ -33,6 +33,8 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Build standard binaries
         run: ${{ matrix.compile-os-arch }} make build
       - name: Upload build artifacts
