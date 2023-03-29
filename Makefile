@@ -1,6 +1,6 @@
 PROJECT_NAME=website-cookie-analyzer
 
-GIT_VERSION=$(shell git describe --always)
+GIT_VERSION=$(shell git describe --always --tags)
 GIT_BRANCH=$(shell git branch --show-current)
 
 LD_FLAGS = -X main.GitVersion=${GIT_VERSION} -X main.GitBranch=${GIT_BRANCH}
