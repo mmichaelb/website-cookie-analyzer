@@ -3,7 +3,7 @@ module github.com/mmichaelb/website-cookie-analyzer
 go 1.20
 
 require (
-	github.com/chromedp/cdproto v0.0.0-20230914224007-a15a36ccbc2e
+	github.com/chromedp/cdproto v0.0.0-20231007061347-18b01cd81617
 	github.com/chromedp/chromedp v0.9.2
 	github.com/sirupsen/logrus v1.9.3
 )
