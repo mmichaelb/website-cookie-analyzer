@@ -17,14 +17,6 @@ jobs:
   build:
     strategy:
       matrix:
-        goos:
-          - linux
-          - windows
-        goarch:
-          - amd64
-          - 386
-          - arm64
-          - arm
         include:
           - goos: linux
             goarch: amd64
