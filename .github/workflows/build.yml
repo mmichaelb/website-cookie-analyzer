@@ -23,7 +23,28 @@ jobs:
       matrix:
         go-version: [1.20.x]
         os: [ubuntu-latest]
-        compile-os-arch: ["GOOS=linux GOARCH=amd64", "GOOS=linux GOARCH=386", "GOOS=linux GOARCH=arm64", "GOOS=linux GOARCH=arm", "GOOS=windows GOARCH=amd64", "GOOS=windows GOARCH=386"]
+        goos:
+          - linux
+          - amd64
+          - 386
+          - arm64
+          - arm
+        goarch:
+          - linux
+          - windows
+        include:
+          - goos: linux
+            goarch: amd64
+          - goos: linux
+            goarch: 386
+          - goos: linux
+            goarch: arm64
+          - goos: linux
+            goarch: arm
+          - goos: windows
+            goarch: amd64
+          - goos: windows
+            goarch: 386
     runs-on: ${{ matrix.os }}
     needs: test
     steps:
@@ -36,12 +57,11 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build standard binaries
-        run: ${{ matrix.compile-os-arch }} make build
+        run: GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} make build
       - name: Upload build artifacts
-        if: ${{ matrix.go-version == '1.20.x' }}
         uses: actions/upload-artifact@v4
         with:
-          name: BuildArtifact
+          name: BuildArtifact_${{ matrix.goos }}_${{ matrix.goarch }}
           path: ./bin/website-cookie-analyzer*
   release:
     strategy:
@@ -55,9 +75,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Download Build artifacts
         uses: actions/download-artifact@v4
-        with:
-          name: BuildArtifact
-          path: ./bin/
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
