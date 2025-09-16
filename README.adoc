@@ -4,6 +4,8 @@ This project aims to provide websites statistics about cookie usage.
 [link=https://github.com/mmichaelb/website-cookie-analyzer/actions/workflows/build.yml]
 image::https://github.com/mmichaelb/website-cookie-analyzer/actions/workflows/build.yml/badge.svg[Build and Deploy job]
 
+NOTE: As of September 16, 2025, this project has been archived.
+
 == Description
 
 This project has been developed as part of a term paper which analyzes Cookie usage on websites.
